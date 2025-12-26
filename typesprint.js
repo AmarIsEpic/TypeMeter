@@ -99,4 +99,48 @@ const TypeSprint = (function() {
         DOM.themeToggle = document.getElementById('theme-toggle');
         DOM.soundToggle = document.getElementById('sound-toggle');
     }
+
+    const TextEngine = {
+        generateText(minChars = 200, difficulty = 'normal') {
+            const words = CONFIG.WORDS[difficulty] || CONFIG.WORDS.normal;
+            const result = [];
+            let charCount = 0;
+            let lastWord = '';
+
+            while (charCount < minChars) {
+                let word;
+                do {
+                    word = words[Math.floor(Math.random()*words.length)];
+                } while (word === lastWord);
+
+                if (difficulty === 'hard' && Math.random() < 0.3 && result.length > 0) {
+                    const punct = CONFIG.PUNCTUATION[
+                        Math.floor(Math.random()*CONFIG.PUNCTUATION.length)
+                    ];
+                    result[result.length - 1] += punct;
+                }
+
+                if(result.length === 0 ||
+                (result.length > 0 && /[.!?]&/.test(result[result.length - 1]))) {
+                    word = word.charAt(0).toUpperCase() + word.slice(1);
+                }
+
+                result.push(word);
+                charCount += word.length + 1;
+                lastWord = word;
+            }
+
+            return result.join(' ');
+        },
+
+        renderTextToHTML(text) {
+            return text
+            .split('')
+            .map((char, index) => {
+                const displayChar = char === ' ' ? '&nbsp' : escapeHTML(char);
+                return `<span class="char" data-index="${index}">${displayChar}</span>`;
+            })
+            .join('');
+        }
+    };
 })
