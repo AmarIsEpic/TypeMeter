@@ -464,3 +464,47 @@ body.dark .char.current::before {
     0%, 100% { opacity: 1; } 
     50% { opacity: 0; }
 }
+
+.text-container.shake {
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(-4px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translate(-4px); }
+}
+
+.typing-hint {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    color: #adb5ad;
+    font-size: 14px;
+}
+
+body.dark .typing-hint {
+    color: #5c5f66;
+}
+
+.hint-sparator {
+    opacity: 0.5;
+}
+
+kbd {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #e9ecef;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 14px;
+}
+
+body.dark kbd {
+    background: #2c2e33;
+    border-color: #373a40;
+}
