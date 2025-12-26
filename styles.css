@@ -222,3 +222,110 @@ body.dark .btn-option.active {
     border-color: #5c7cfa;
     color: #5c7cfa;
 }
+
+.best-scores {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-bottom: 48px;
+    padding: 24px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+}
+
+body.dark .best-scores {
+    background: #25262b;
+    border-color: #373a40;
+}
+
+.best-scores-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.best-label {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+body.dark .best-label {
+    color: #909296;
+}
+
+.best-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #4263eb;
+}
+
+body.dark .best-value {
+    color: #5c7cfa;
+}
+
+.btn-primary,
+.btn-secondary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'JetBrains', 'Fira Code', 'Consolas', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-primary {
+    width: 100%;
+    background: #4263eb;
+    color: white;
+}
+
+body.dark .btn-primary {
+    background: #5c7cfa;
+}
+
+.btn-primary:hover {
+    background: #364fc7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+body.dark .btn-primary:hover {
+    background: #748ffc;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.btn-secondary {
+    background: white;
+    color: #212529;
+    border: 2px solid #dee2e6; 
+}
+
+body.dark .btn-secondary {
+    background: #25262b;
+    color: #e9ecef;
+    border-color: #373a40;
+}
+
+.btn-secondary:hover {
+    border-color: #4263eb;
+    color: #4263eb;
+}
+
+.body.dark .btn-secondary:hover{
+    border-color: #5c7cfa;
+    color: #5c7cfa;
+}
+
+.btn-hint {
+    font-size: 14px;
+    font-weight: 400;
+    opacity: 0.7;
+}
