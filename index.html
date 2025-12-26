@@ -17,9 +17,9 @@
                     <span class="sound-on">🔊</span>
                     <span class="sound-off">🔇</span>
                 </button>
-                <button id="theme-toggle" class="icon-btn" title="Toggle Theme" aria-label="Toggle dark/light theem">
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme" aria-label="Toggle dark/light theme">
                     <span class="theme-light">☀️</span>
-                    <span class="theme-dark"></span>
+                    <span class="theme-dark">🌙</span>
                 </button>
             </div>
         </header>
@@ -34,7 +34,7 @@
                 <div class="settings-panel">
                     <div class="setting-group">
                         <label class="setting-label">Duration</label>
-                        <div class="btn-group" id="dureation-selector">
+                        <div class="btn-group" id="duration-selector">
                             <button class="btn-option" data-value="15">15s</button>
                             <button class="btn-option active" data-value="30">30s</button>
                             <button class="btn-option" data-value="60">60s</button>
@@ -53,7 +53,7 @@
                     <div class="setting-group">
                         <label class="setting-label">Difficulty</label>
                         <div class="btn-group" id="difficulty-selector">
-                            <button class="btn-option active" data-value="timed">Timed</button>
+                            <button class="btn-option active" data-value="normal">Normal</button>
                             <button class="btn-option" data-value="hard">Hard</button>
                         </div>
                     </div>
@@ -69,6 +69,13 @@
                         <span class="best-value" id="best-zen">-</span>
                     </div>
                 </div>
+
+                <button id="start-btn" class="btn-primary">
+                    <span>Start Typing</span>
+                    <span class="btn-hint">or press Enter</span>
+                </button>
+            </div>
+        </section>
 
                 <section id="typing-screen" class="screen">
                     <div class="screen-content">
@@ -86,10 +93,56 @@
                                 <span class="stat-label" id="timer-label">seconds</span>
                             </div>
                         </div>
+
+                        <div class="text-container">
+                            <div id="text-display" class="text-display"></div>
+                        </div>
+
+                        <div class="typing-hint">
+                            <span>Start typing to begin</span>
+                            <span class="hint-separator">•</span>
+                            <span>Press <kbd>Esc</kbd> to restart</span>
+                        </div>
                     </div>
                 </section>
+
+                <section id="results-screen" class="screen">
+                    <div class="screen-content">
+                        <h2 class="results-title">Test Complete!</h2>
+
+                        <div class="results-grid">
+                            <div class="result-card primary">
+                                <span class="result-value" id="result-wpm">0</span>
+                                <span class="result-label">Words Per Minute</span>
+                                <span class="result-comparison" id="wpm-comparison"></span>
+                            </div>
+
+                            <div class="result-card">
+                                <span class="result-value" id="result-accuracy">0%</span>
+                                <span class="result-label">Accuracy</span>
+                            </div>
+
+                            <div class="result-card">
+                                <span class="result-value" id="result-chars">0</span>
+                                <span class="result-label">Characters</span>
+                            </div>
+
+                            <div class="result-card">
+                                <span class="result-value" id="result-errors">0</span>
+                                <span class="result-label">Errors</span>
+                            </div>
+                        </div>
+                        <div class="results-actions">
+                        <button id="retry-btn" class="btn-primary">
+                            <span>Retry</span>
+                            <span class="btn-hint">same settings</span>
+                        </button>
+                        <button id="new-test-btn" class="btn-secondary">
+                            <span>New Test</span>
+                        </button>
+                    </div>
+                </div>
+                </section>
             </div>
-        </section>
-    </div>
 </body>
 </html>
