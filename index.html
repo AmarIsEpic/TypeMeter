@@ -12,7 +12,56 @@
                 <span class="logo-icon">⌨</span>
                 <span class="logo-text">TypeSprint</span>
             </h1>
+            <div class="header-controls">
+                <button id="sound-toggle" class="icon-btn" title="Toggle Sound" aria-label="Toggle typing sound">
+                    <span class="sound-on">🔊</span>
+                    <span class="sound-off">🔇</span>
+                </button>
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme" aria-label="Toggle dark/light theem">
+                    <span class="theme-light">☀️</span>
+                    <span class="theme-dark"></span>
+                </button>
+            </div>
         </header>
+
+        <section id="start-screen" class="screen active">
+            <div class="screen-content">
+                <div class="welcome-text">
+                    <h2>Test your typing speed</h2>
+                    <p>Choose your settings and start typing</p>
+                </div>
+
+                <div class="settings-panel">
+                    <div class="setting-group">
+                        <label class="setting-label">Duration</label>
+                        <div class="btn-group" id="dureation-selector">
+                            <button class="btn-option" data-value="15">15s</button>
+                            <button class="btn-option active" data-value="30">30s</button>
+                            <button class="btn-option" data-value="60">60s</button>
+                            <button class="btn-option" data-value="120">120s</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label class="setting-label">Mode</label>
+                        <div class="btn-group" id="mode-selector">
+                            <button class="btn-option active" data-value="timed">Timed</button>
+                            <button class="btn-option" data-value="zen">Zen</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label class="setting-label">Difficulty</label>
+                        <div class="btn-group" id="difficulty-selector">
+                            <button class="btn-option active" data-value="timed">Timed</button>
+                            <button class="btn-option" data-value="hard">Hard</button>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </section>
     </div>
 </body>
 </html>
