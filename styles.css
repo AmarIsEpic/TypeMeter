@@ -617,3 +617,86 @@ body.dark  .result-comparison.decline {
 .results-actions .btn-secondary {
     flex: 1;
 }
+
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    #app {
+        padding: 16px;
+    }
+
+    .header {
+        margin-bottom: 24px;
+    }
+
+    .logo-text {
+        display: none;
+    }
+
+    .stats-bar {
+        gap: 24px;
+        padding: 16px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+    }
+
+    .text-container {
+        padding: 16px;
+    }
+
+    .text-display {
+        font-size: 18px;
+    }
+
+    .best-scores {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .result-actions {
+        flex-direction: column;
+    }
+
+    .typing-hint {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .hint-separator {
+        display: none;
+    }
+
+    .welcome-text h2 {
+        font-size: 28px;
+    }
+
+    .results-title {
+        font-size: 28px;
+    }
+
+    .result-card.primary .result-value {
+        font-size: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-group {
+        flex-direction: column;
+    }
+
+    .btn-option {
+        min-width: 100%;
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .result-card.primary {
+        grid-column: span 1;
+    }
+}
