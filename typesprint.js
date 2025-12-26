@@ -31,6 +31,45 @@ const TypeSprint = (function() {
                 'authentication', 'verification', 'notification', 'interigation', 'deployment'
             ]
         },
-        
-    }
+        PUNCTUATION: ['.', ',', '!', '?', ';', ':', '-', '"', "'"],
+        STORAGE_KEYS: {
+            BEST_SCORES: 'typesprint_best_scores',
+            THEME: 'typesprint_theme',
+            SOUND: 'typesprint_sound'
+        },
+        AUDIO: {
+            KEYPRESS_FREQ: 800,
+            KEYPRESS_DURATION: 0.05,
+            ERROR_FREQ: 200,
+            ERROR_DURATION: 0.1
+        }
+    };
+
+    const state = {
+        appState: 'idle',
+        config: {
+            duration: 30,
+            mode: 'timed',
+            difficulty: 'normal'
+        },
+        test: {
+            text: '',
+            charIndex: 0,
+            startTime: null,
+            endTime: null,
+            timerInterval: null,
+            elapsedTime: 0,
+            totalKeystrokes: 0,
+            correctKeystrokes: 0,
+            incorrectKeystrokes: 0,
+            charStates: [],
+        },
+        settings: {
+            theme: 'light',
+            soundEnabled: false
+        },
+        bestScores: {}
+    };
+
+    const DOM = {}
 })
