@@ -1,0 +1,69 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    background-color: #f8f9fa;
+    color: #212529;
+    min-height: 100vh;
+    line-height: 1.6;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+body.dark {
+    background-color: #1a1b1e;
+    color: #e9ecef;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 32px;
+}
+
+body.dark .header {
+    border-bottom-color: #373a40;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #212529;
+}
+
+body.dark .logo {
+    color: #e9ecef;
+}
+
+.logo-icon {
+    font-size: 32px;
+}
+
+.header-controls {
+    display: flex;
+    gap: 8px;
+}
