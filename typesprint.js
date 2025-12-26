@@ -143,4 +143,50 @@ const TypeSprint = (function() {
             .join('');
         }
     };
+
+    const AudioEngine = {
+        AudioContext: null,
+
+        init() {
+            if(!this.audioContext) {
+                this.audioContext = new (window.AudioContext  || window.webkitAudioContext)();
+            }
+        },
+
+        playTone(frequency, duration) {
+            if(!state.settings.soundEnabled || !this.audioContext) return;
+
+            if (this.audioContext.state === 'suspended') {
+                this.audioContext.resume();
+            }
+
+            const oscillator = this.audioContext.createOscillator();
+            const gainNode = this.audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(this.audioContext.destination);
+
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(
+                0.01,
+                this.audioContext.currentTime + durration
+            );
+
+            oscillator.start(this.audioContext.currentTime);
+            oscillator.stop(this.audioContext.currentTime + durration);
+        },
+
+        playKeypress() {
+            this.playTone(CONFIG.AUDIO.KEYPRESS_FREQ, CONFIG.AUDIO.KEYPRESS_DURATION);
+        },
+
+        playError() {
+            this.playTone(CONFIG.AUDIO.ERROR_FREQ, CONFIG.AUDIO.ERROR_DURATION);
+        }
+    };
+
+    
 })
