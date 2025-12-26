@@ -330,6 +330,82 @@ const TypeSprint = (function() {
             if(event.key.length === 1) {
                 this.handleCharacterInput(event.key);
             }
+        },
+
+        handleCharacterInput(char) {
+            const { test } = state;
+
+            if(test.startTime === null) {
+                TestController.startTimer();
+            }
+
+            if(test.charIndex >= test.text.length) {
+                TestController.finishTest();
+                return;
+            }
+
+            const expectedChar = test.text[test.charIndex];
+            const isCorrect = char === expectedChar;
+
+            test.totalKeystrokes++;
+
+            if(isCorrect) {
+                test.correctKeystrokes++;
+                test.charStates[test.charIndex] = 'correct';
+                AudioEngine.playKeypress();
+            } else {
+                test.incorrectKeystrokes++;
+                test.charStates[test.charIndex] = 'incorrect';
+                AudioEngine.playError();
+
+                DOM.textContainer.classList.remove('shake');
+                void DOM.textContainer.offsetWidth;
+                DOM.textContainer.classList.add('shake');
+            }
+
+            test.charIndex++;
+
+            UI.updateCharacterDisplay();
+            UI.updateLiveStats();
+
+            if(state.config.mode === 'zen' && test.charIndex >= test.text.length) {
+                TestController.finishTest();
+            }
+        },
+
+        handleBackspace() {
+            const { test } = state;
+            
+            if(test.charIndex > 0) {
+                test.charIndex--;
+                UI.updateCharacterDisplay();
+            }
+        }
+    };
+
+    const TestController = {
+        initTest() {
+            const { config } = state;
+
+            const minChars = config.made === 'zen' ? 150 : Math.max(200, config.duration*10);
+            state.test = {
+                text: TextEngine.generateText(minChars, config.difficulty),
+                charIndex: 0,
+                startTime: null,
+                endTime: null,
+                timerInterval: null,
+                elapsedTime: 0,
+                totalKeystrokes: 0,
+                correctKeystrokes: 0,
+                incorrectKeystrokes: 0,
+                charStates: []
+            };
+
+            state.test.charStates = new Array(state.test.text.length).fill('pending');
+
+            DOM.textDisplay.innerHTML = TextEngine.renderTextToHTML(state.test.text);
+
+            
         }
     }
 })
