@@ -188,5 +188,40 @@ const TypeSprint = (function() {
         }
     };
 
-    
+    const StatsEngine = {
+        calculateWPM() {
+            const correctChars = state.test.correctKeystrokes;
+            const elapsedMinutes = state.test.elapsedTime / 60;
+            if (elapsedMinutes === 0) return 0;
+            return Math.round((correctChars/5) / elapsedMinutes);
+        },
+
+        calculateAccuracy() {
+            const total = state.test.totalKeystrokes;
+            const correct = state.test.correctKeystrokes;
+            if (total === 0) return 100;
+            return Math.round((correct / total) * 100);
+        },
+
+        getErrorCount() {
+            return state.test.incorrectKeystrokes;
+        },
+
+        getCharsTyped() {
+            return state.test.charIndex;
+        }
+    };
+
+    const StorageEngine = {
+        loadBestScores() {
+            tryy {
+                const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.BEST_SCORES);
+                if(stored) {
+                    state.bestScores = JSON.parse(stored);
+                }
+            } catch (e) {
+                console.warn('Failed to load best scores:', e);
+            }
+        }
+    }
 })
