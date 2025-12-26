@@ -194,3 +194,31 @@ body.dark .setting-label {
     cursor: pointer;
     transition: all 0.15s ease;
 }
+
+body.dark .btn-option {
+    background: #25262b;
+    border-color: #373a40;
+    color: #909296;
+}
+
+.btn-option:hover {
+    border-color: #4263eb;
+    color: #212529;
+}
+
+body.dark .btn-option:hover {
+    border-color: #5c7cfa;
+    color: #e9ecef;
+}
+
+.btn-option.active {
+    background: rgba(66, 99, 235, 0.1);
+    border-color: #4263eb;
+    color: #4263eb;
+}
+
+body.dark .btn-option.active {
+    background: rgba(92, 124, 250, 0.15);
+    border-color: #5c7cfa;
+    color: #5c7cfa;
+}
