@@ -214,13 +214,82 @@ const TypeSprint = (function() {
 
     const StorageEngine = {
         loadBestScores() {
-            tryy {
+            try {
                 const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.BEST_SCORES);
                 if(stored) {
                     state.bestScores = JSON.parse(stored);
                 }
             } catch (e) {
                 console.warn('Failed to load best scores:', e);
+                state.bestScores = {};
+            }
+        },
+
+        saveBestScores() {
+            try {
+                localStorage.setItem(
+                    CONFIG.STORAGE_KEYS.BEST_SCORES,
+                    JSON.stringify(state.bestScores)
+                );
+            } catch (e) {
+                console.warm('Failed to save best scores:', e);
+            }
+        },
+
+        getBestScore() {
+            const key = `${state.config.mode}_${state.config.duration}`;
+            return currentBest = state.bestScores[key] || 0;
+        },
+
+        updateBestScore(wpm) {
+            const key = `${state.config.mode}_${state.config.duration}`;
+            const currentBest = state.bestScores[key] || 0;
+
+            if(wpm > currentBest) {
+                state.bestScores[key] = wpm;
+                this.saveBestScores();
+                return true;
+            }
+            return false;
+        },
+
+        getOverallBest(mode) {
+            let best = 0;
+            for (const [key, value] of Object.entries(state.bestScores)) {
+                if(key.startsWith(mode + '-') && value > best) {
+                    best = value;
+                }
+            }
+            return best || null;
+        },
+
+        loadTheme() {
+            try{
+                const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.THEME);
+                if (stored) {
+                    state.settings.theme = stored;
+                }
+            } catch (e) {
+                console.warn('Failed to load theme:', e);
+            }
+        },
+
+        saveTheme() {
+            try {
+                localStorage.setItem(CONFIG.STORAGE_KEYS.THEME, state.settings.theme);
+            } catch (e) {
+                console.warn('Failed to save theme:', e);
+            }
+        },
+
+        loadSound() {
+            try {
+                const stored = localStorage.getItem(CONFIG.STORAGE_KEYS.SOUND);
+                if(stored !== null) {
+                    state.settings.soundEnabled = stored === 'true';
+                }
+            } catch (e) {
+                console.warn('Failed to load sound setting:', e);
             }
         }
     }
