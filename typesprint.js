@@ -71,5 +71,32 @@ const TypeSprint = (function() {
         bestScores: {}
     };
 
-    const DOM = {}
+    const DOM = {};
+
+    function cacheDOMReferences() {
+        DOM.startScreen = document.getElementById('start-screen');
+        DOM.typingScreen = document.getElementById('typing-screen');
+        DOM.resltsScreen = document.getElementById('results-screen');
+        DOM.durationScreen = document.getElementById('duration-screen');
+        DOM.modeSelector = document.getElementById('mode-selector');
+        DOM.difficultySelector = document.getElementById('difficulty-selector');
+        DOM.bestTimed = document.getElementById('best-timed');
+        DOM.bestZen = document.getElementById('best-zen');
+        DOM.startBtn = document.getElementById('start-btn');
+        DOM.liveWpm = document.getElementById('live-wpm');
+        DOM.liveAccuracy = document.getElementById('live-accuracy');
+        DOM.liveTimer = document.getElementById('live-timer');
+        DOM.timerLabel = document.getElementById('timer-label');
+        DOM.textDisplay = document.getElementById('text-display');
+        DOM.textContainer = document.getElementById('text-container');
+        DOM.resultWpm = document.getElementById('result-wpm');
+        DOM.resultAccuracy = document.getElementById('result-accuracy');
+        DOM.resultChars = document.getElementById('result-chars');
+        DOM.resultErros = document.getElementById('result-errors');
+        DOM.wpmComparison = document.getElementById('wpm-comparison');
+        DOM.retryBtn = document.getElementById('retry-btn');
+        DOM.newTestBtn = document.getElementById('new-test-btn');
+        DOM.themeToggle = document.getElementById('theme-toggle');
+        DOM.soundToggle = document.getElementById('sound-toggle');
+    }
 })
