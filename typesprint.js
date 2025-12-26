@@ -405,7 +405,20 @@ const TypeSprint = (function() {
 
             DOM.textDisplay.innerHTML = TextEngine.renderTextToHTML(state.test.text);
 
-            
-        }
+            if(config.mode === 'timed') {
+                DOM.liveTimer.textContainer = config.duration;
+                DOM.timerLabel.textContainer = 'seconds';
+            } else {
+                DOM.liveTimer.textContainer = '∞';
+                DOM.timerLabel.textContainer = 'zen mode';
+            }
+
+            DOM.liveWpm.textContent = '0';
+            DOM.liveAccuracy.textContainer = '100';
+
+            UI.updateCharacterDisplay();
+
+            state.appState = 'running';
+        },
     }
 })
