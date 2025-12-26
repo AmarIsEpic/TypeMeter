@@ -92,7 +92,7 @@ const TypeSprint = (function() {
         DOM.resultWpm = document.getElementById('result-wpm');
         DOM.resultAccuracy = document.getElementById('result-accuracy');
         DOM.resultChars = document.getElementById('result-chars');
-        DOM.resultErros = document.getElementById('result-errors');
+        DOM.resultErrors = document.getElementById('result-errors');
         DOM.wpmComparison = document.getElementById('wpm-comparison');
         DOM.retryBtn = document.getElementById('retry-btn');
         DOM.newTestBtn = document.getElementById('new-test-btn');
@@ -420,5 +420,70 @@ const TypeSprint = (function() {
 
             state.appState = 'running';
         },
+
+        startTimer() {
+            state.test.startTime = performance.now();
+            
+            const updateTimer = () => {
+                if (state.appState !== 'running') return;
+
+                const now = performance.now();
+                state.test.elapsedTime = (now - state.test.startTime) / 1000;
+
+                if(state.config.mode === 'timed') {
+                    const remaining = Math.max(0, state.config.duration - state.test.elapsedTime);
+                    DOM.liveTimer.textContent = Math.ceil(remaining);
+
+                    if( remaining <= 0) {
+                        this.finishTest();
+                        return;
+                    } else {
+                        DOM.liveTimer.textContent = Math.floor(state.test.elapsedTime);
+                    }
+
+                    requestAnimationFrame(updateTimer);
+                };
+
+                requestAnimationFrame(updateTimer);
+            },
+
+            finishTest() {
+                state.test.endTime = performance.now();
+                state.appState = 'finished';
+
+                const wpm = StatsEngine.calculateWPM();
+                const accuracy = StatsEngine.calculateAccuracy();
+                const errors = StatsEngine.getErrorCount();
+                const chars = StatsEngine.getCharsTyped();
+
+                const previousBest = StorageEngine.getBestScore();
+                StorageEngine.updateBestScore(wpm);
+
+                DOM.resultWpm.textContent = wpm;
+                DOM.resultAccuracy.textContent = accuracy + '%';
+                DOM.resultChars.textContent = chars;
+                DOM.resultErrors.textContent = errors;
+
+                if(previousBest !== null) {
+                    const diff = wpm - previousBest;
+                    if (diff > 0) {
+                        DOM.wpmComparison.textContent = `↑ ${diff} WPM improvement!`;
+                        DOM.wpmComparison.className = 'result-comparison improvement';
+                    } else if (diff < 0){
+                        DOM.wpmComparison.textContent = `↓ ${Math.abs(diff)} WPM below best`;
+                        DOM.wpmComparison.className = 'result-comparison decline';
+                    } else {
+                        DOM.wpmComparison.textContent = '= Matched your best!';
+                        DOM.wpmComparison.className = 'result-comparison';
+                    }
+                } else {
+                    DOM.wpmComparison.textContent = 'First score recorded!';
+                    DOM.wpmComparison.className = 'result-comparison improvement';
+                }
+
+                UI.updateBestScore();
+                UI.showScreen('results');
+            }
+        };
     }
 })
