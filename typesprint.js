@@ -291,6 +291,45 @@ const TypeSprint = (function() {
             } catch (e) {
                 console.warn('Failed to load sound setting:', e);
             }
+        },
+
+        saveSound(){
+            try {
+                localStorage.setItem(
+                    CONFIG.STORAGE_KEYS.SOUND,
+                    String(state.settings.soundEnabled)
+                );
+            } catch (e) {
+                console.warn('Failed to save sound setting:', e);
+            }
+        }
+    };
+
+    const InputHandler = {
+        handleKeydown(event) {
+            if(state.appState !== 'running') return;
+
+            if(!event.ctrlKey && !event.metaKey && !event.altKey) {
+                event.preventDefault();
+            }
+
+            if(['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'].includes(event.key)) {
+                return;
+            }
+
+            if(event.key === 'Escape') {
+                UI.showScreen('start');
+                return;
+            }
+
+            if(event.key === 'Backspace') {
+                this.handleBackspace();
+                return;
+            }
+
+            if(event.key.length === 1) {
+                this.handleCharacterInput(event.key);
+            }
         }
     }
 })
