@@ -406,3 +406,61 @@ body.dark .timer-display .stat-value {
     word-wrap: break-word;
     position: relative;
 }
+
+.char {
+    position: relative;
+    color: #adb5ad;
+    transform: color 0.15s ease;
+}
+
+body.dark .char {
+    color: #5c5f66;
+}
+
+.char.correct {
+    color: #40c057;
+}
+
+body.dark .char.correct {
+    color: #51cf66;
+}
+
+.char.incorrect {
+    color: #fa5252;
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-underline-offset: 4px;
+}
+
+body.dark .char.incorrect {
+    color: #ff6b6b;
+}
+
+.char.current {
+    background: rgba(66, 99, 235, 0.1);
+    border-radius: 2px;
+}
+
+body.dark .char.current {
+    background: rgba(92, 124, 250, 0.15);
+}
+
+.char.current::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #4263eb;
+    animation: blink 1s step-end infinite;
+}
+
+body.dark .char.current::before {
+    background: #5c7cfa;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; } 
+    50% { opacity: 0; }
+}
