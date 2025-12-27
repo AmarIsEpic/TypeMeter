@@ -4,31 +4,42 @@ const TypeSprint = (function() {
     const CONFIG = {
         WORDS: {
             normal: [
-                'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'it',
-                'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this',
-                'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or',
-                'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what',
-                'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me',
-                'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know',
-                'take', 'people', 'into', 'year', 'your', 'good', 'some', 'could',
-                'them', 'see', 'other', 'than', 'then', 'now', 'look', 'only', 'come',
-                'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how',
-                'our', 'work', 'first', 'well', 'way', 'even', 'new', 'want', 'because',
-                'any', 'these', 'give', 'day', 'most', 'us', 'code', 'type', 'fast',
-                'slow', 'quick', 'jump', 'lazy', 'fox', 'dog', 'run', 'walk', 'talk',
-                'read', 'write', 'learn', 'teach', 'help', 'find', 'keep', 'let', 'put',
-                'set', 'try', 'ask', 'need', 'feel', 'seem', 'leave', 'call', 'show'
+                        'int', 'void', 'var', 'let', 'const', 'function', 'return', 'if', 'else',
+        'for', 'while', 'do', 'switch', 'case', 'break', 'continue', 'class',
+        'public', 'private', 'static', 'new', 'this', 'true', 'false', 'null',
+        'string', 'boolean', 'number', 'array', 'object', 'import', 'export',
+        'from', 'default', 'try', 'catch', 'throw', 'finally', 'async', 'await',
+        'html', 'css', 'div', 'span', 'script', 'style', 'head', 'body', 'meta',
+        'link', 'href', 'src', 'alt', 'type', 'name', 'value', 'onclick', 'flex',
+        'grid', 'margin', 'padding', 'border', 'color', 'width', 'height', 'display',
+        'position', 'absolute', 'relative', 'fixed', 'float', 'clear', 'overflow',
+        'print', 'input', 'output', 'file', 'open', 'close', 'read', 'write',
+        'python', 'java', 'ruby', 'node', 'react', 'vue', 'angular', 'express',
+        'mongo', 'sql', 'api', 'json', 'xml', 'http', 'get', 'post', 'put', 'delete',
+        'git', 'push', 'pull', 'commit', 'merge', 'branch', 'clone', 'fetch'
             ],
             hard: [
-                'algorithm', 'javascript', 'typescript', 'development', 'programming',
-                'architecture', 'implementation', 'functionality', 'performance', 'optimization',
-                'authentication', 'authorization', 'infrastructure', 'configuration', 'documentation',
-                'synchronization', 'asynchronous', 'parallelization', 'visualization', 'transformation',
-                'encapsulation', 'polymorphism', 'inheritance', 'abstraction', 'virtualization',
-                'repository', 'dependency', 'interface', 'component', 'decorator',
-                'observable', 'subscription', 'middleware', 'controller', 'validator',
-                'serialization', 'deserialization', 'compression', 'encryption', 'decryption',
-                'verification', 'notification', 'integration', 'deployment'
+'function', 'constructor', 'prototype', 'instanceof', 'typeof', 'undefined',
+        'addEventListener', 'querySelector', 'getElementById', 'createElement',
+        'appendChild', 'removeChild', 'innerHTML', 'textContent', 'className',
+        'setAttribute', 'getAttribute', 'preventDefault', 'stopPropagation',
+        'localStorage', 'sessionStorage', 'setTimeout', 'setInterval', 'clearTimeout',
+        'requestAnimationFrame', 'cancelAnimationFrame', 'getBoundingClientRect',
+        'offsetWidth', 'offsetHeight', 'scrollTop', 'scrollLeft', 'clientWidth',
+        'parentNode', 'childNodes', 'firstChild', 'lastChild', 'nextSibling',
+        'previousSibling', 'nodeName', 'nodeValue', 'nodeType', 'attributes',
+        'forEach', 'map', 'filter', 'reduce', 'find', 'findIndex', 'includes',
+        'indexOf', 'lastIndexOf', 'slice', 'splice', 'concat', 'join', 'split',
+        'toLowerCase', 'toUpperCase', 'trim', 'replace', 'match', 'search',
+        'parseInt', 'parseFloat', 'isNaN', 'isFinite', 'toString', 'valueOf',
+        'hasOwnProperty', 'propertyIsEnumerable', 'isPrototypeOf', 'defineProperty',
+        'Object.keys', 'Object.values', 'Object.entries', 'Object.assign',
+        'Array.isArray', 'Array.from', 'Promise.all', 'Promise.resolve',
+        'console.log', 'console.error', 'console.warn', 'JSON.parse', 'JSON.stringify',
+        'document.body', 'window.location', 'window.history', 'navigator.userAgent',
+        'border-radius', 'box-shadow', 'text-align', 'font-size', 'font-weight',
+        'line-height', 'background-color', 'justify-content', 'align-items',
+        'flex-direction', 'grid-template', 'media-query', 'pseudo-class', 'z-index'
             ]
         },
         PUNCTUATION: ['.', ',', '!', '?', ';', ':', '-', '"', "'"],
@@ -135,13 +146,21 @@ const TypeSprint = (function() {
         },
 
         renderTextToHTML(text) {
-            return text
-            .split('')
-            .map((char, index) => {
-                const displayChar = char === ' ' ? '&nbsp;' : escapeHTML(char);
-                return `<span class="char" data-index="${index}">${displayChar}</span>`;
-            })
-            .join('');
+            const words = text.split(' ');
+            return words.map((word, wordIndex) => {
+                const chars = word.split('').map((char, charIndex) => {
+                    const globalIndex = text.indexOf(word) + charIndex;
+                    const displayChar = escapeHTML(char);
+                    return `<span class="char" data-index=${globalIndex}">${displayChar}</span>`;
+                }).join('');
+
+                const spaceIndex = words.slice(0, wordIndex + 1).join(' ').length;
+                const space = wordIndex < words.length - 1
+                ? `<span class="char" data-index="${spaceIndex}">&nbsp;</span>`
+                : '';
+
+                return `<span class="word">${chars}</span>${space}`;
+            }).join(''); 
         }
     };
 

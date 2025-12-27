@@ -404,6 +404,8 @@ body.dark .text-container {
     line-height: 1.8;
     letter-spacing: 0.02em;
     word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: keep-all;
     position: relative;
 }
 
@@ -411,6 +413,8 @@ body.dark .text-container {
     position: relative;
     color: #adb5ad;
     transition: color 0.15s ease;
+    display: inline;
+    white-space: nowrap;
 }
 
 body.dark .char {
@@ -616,6 +620,11 @@ body.dark  .result-comparison.decline {
 .results-actions .btn-primary,
 .results-actions .btn-secondary {
     flex: 1;
+}
+
+.word {
+    display: inline-block;
+    white-space: nowrap;
 }
 
 @media (max-width: 768px) {
