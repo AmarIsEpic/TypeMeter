@@ -21,14 +21,14 @@ const TypeSprint = (function() {
             ],
             hard: [
                 'algorithm', 'javascript', 'typescript', 'development', 'programming',
-                'architecture', 'implementation', 'funcionality', 'performance', 'optimization',
-                'authetication', 'authorization', 'infrastructure', 'configuration', 'documentation',
+                'architecture', 'implementation', 'functionality', 'performance', 'optimization',
+                'authentication', 'authorization', 'infrastructure', 'configuration', 'documentation',
                 'synchronization', 'asynchronous', 'parallelization', 'visualization', 'transformation',
                 'encapsulation', 'polymorphism', 'inheritance', 'abstraction', 'virtualization',
                 'repository', 'dependency', 'interface', 'component', 'decorator',
                 'observable', 'subscription', 'middleware', 'controller', 'validator',
                 'serialization', 'deserialization', 'compression', 'encryption', 'decryption',
-                'authentication', 'verification', 'notification', 'interigation', 'deployment'
+                'verification', 'notification', 'integration', 'deployment'
             ]
         },
         PUNCTUATION: ['.', ',', '!', '?', ';', ':', '-', '"', "'"],
@@ -76,10 +76,10 @@ const TypeSprint = (function() {
     function cacheDOMReferences() {
         DOM.startScreen = document.getElementById('start-screen');
         DOM.typingScreen = document.getElementById('typing-screen');
-        DOM.resltsScreen = document.getElementById('results-screen');
+        DOM.resultsScreen = document.getElementById('results-screen');
         DOM.durationScreen = document.getElementById('duration-screen');
         DOM.modeSelector = document.getElementById('mode-selector');
-        DOM.difficultySelector = document.getElementById('difficulty-selector');
+        DOM.durationSelector = document.getElementById('duration-selector');
         DOM.bestTimed = document.getElementById('best-timed');
         DOM.bestZen = document.getElementById('best-zen');
         DOM.startBtn = document.getElementById('start-btn');
@@ -88,7 +88,7 @@ const TypeSprint = (function() {
         DOM.liveTimer = document.getElementById('live-timer');
         DOM.timerLabel = document.getElementById('timer-label');
         DOM.textDisplay = document.getElementById('text-display');
-        DOM.textContainer = document.getElementById('text-container');
+        DOM.textContainer = document.querySelector('.text-container');
         DOM.resultWpm = document.getElementById('result-wpm');
         DOM.resultAccuracy = document.getElementById('result-accuracy');
         DOM.resultChars = document.getElementById('result-chars');
@@ -98,6 +98,7 @@ const TypeSprint = (function() {
         DOM.newTestBtn = document.getElementById('new-test-btn');
         DOM.themeToggle = document.getElementById('theme-toggle');
         DOM.soundToggle = document.getElementById('sound-toggle');
+        DOM.difficultySelector = document.getElementById('difficulty-selector');
     }
 
     const TextEngine = {
@@ -121,7 +122,7 @@ const TypeSprint = (function() {
                 }
 
                 if(result.length === 0 ||
-                (result.length > 0 && /[.!?]&/.test(result[result.length - 1]))) {
+                (result.length > 0 && /[.!?]$/.test(result[result.length - 1]))) {
                     word = word.charAt(0).toUpperCase() + word.slice(1);
                 }
 
@@ -137,7 +138,7 @@ const TypeSprint = (function() {
             return text
             .split('')
             .map((char, index) => {
-                const displayChar = char === ' ' ? '&nbsp' : escapeHTML(char);
+                const displayChar = char === ' ' ? '&nbsp;' : escapeHTML(char);
                 return `<span class="char" data-index="${index}">${displayChar}</span>`;
             })
             .join('');
@@ -145,7 +146,7 @@ const TypeSprint = (function() {
     };
 
     const AudioEngine = {
-        AudioContext: null,
+        audioContext: null,
 
         init() {
             if(!this.audioContext) {
@@ -172,11 +173,11 @@ const TypeSprint = (function() {
             gainNode.gain.setValueAtTime(0.1, this.audioContext.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(
                 0.01,
-                this.audioContext.currentTime + durration
+                this.audioContext.currentTime + duration
             );
 
             oscillator.start(this.audioContext.currentTime);
-            oscillator.stop(this.audioContext.currentTime + durration);
+            oscillator.stop(this.audioContext.currentTime + duration);
         },
 
         playKeypress() {
@@ -232,18 +233,18 @@ const TypeSprint = (function() {
                     JSON.stringify(state.bestScores)
                 );
             } catch (e) {
-                console.warm('Failed to save best scores:', e);
+                console.warn('Failed to save best scores:', e);
             }
         },
 
         getBestScore() {
             const key = `${state.config.mode}_${state.config.duration}`;
-            return currentBest = state.bestScores[key] || 0;
+            return state.bestScores[key] || null;
         },
 
         updateBestScore(wpm) {
             const key = `${state.config.mode}_${state.config.duration}`;
-            const currentBest = state.bestScores[key] || 0;
+            const currentBest = state.bestScores[key] || null;
 
             if(wpm > currentBest) {
                 state.bestScores[key] = wpm;
@@ -256,7 +257,7 @@ const TypeSprint = (function() {
         getOverallBest(mode) {
             let best = 0;
             for (const [key, value] of Object.entries(state.bestScores)) {
-                if(key.startsWith(mode + '-') && value > best) {
+                if(key.startsWith(mode + '_') && value > best) {
                     best = value;
                 }
             }
@@ -384,106 +385,105 @@ const TypeSprint = (function() {
     };
 
     const TestController = {
-        initTest() {
-            const { config } = state;
+    initTest() {
+        const { config } = state;
 
-            const minChars = config.made === 'zen' ? 150 : Math.max(200, config.duration*10);
-            state.test = {
-                text: TextEngine.generateText(minChars, config.difficulty),
-                charIndex: 0,
-                startTime: null,
-                endTime: null,
-                timerInterval: null,
-                elapsedTime: 0,
-                totalKeystrokes: 0,
-                correctKeystrokes: 0,
-                incorrectKeystrokes: 0,
-                charStates: []
-            };
-
-            state.test.charStates = new Array(state.test.text.length).fill('pending');
-
-            DOM.textDisplay.innerHTML = TextEngine.renderTextToHTML(state.test.text);
-
-            if(config.mode === 'timed') {
-                DOM.liveTimer.textContainer = config.duration;
-                DOM.timerLabel.textContainer = 'seconds';
-            } else {
-                DOM.liveTimer.textContainer = '∞';
-                DOM.timerLabel.textContainer = 'zen mode';
-            }
-
-            DOM.liveWpm.textContent = '0';
-            DOM.liveAccuracy.textContainer = '100';
-
-            UI.updateCharacterDisplay();
-
-            state.appState = 'running';
-        },
-
-        startTimer() {
-            state.test.startTime = performance.now();
-            
-            const updateTimer = () => {
-                if (state.appState !== 'running') return;
-
-                const now = performance.now();
-                state.test.elapsedTime = (now - state.test.startTime) / 1000;
-
-                if(state.config.mode === 'timed') {
-                    const remaining = Math.max(0, state.config.duration - state.test.elapsedTime);
-                    DOM.liveTimer.textContent = Math.ceil(remaining);
-
-                    if( remaining <= 0) {
-                        this.finishTest();
-                        return;
-                    } else {
-                        DOM.liveTimer.textContent = Math.floor(state.test.elapsedTime);
-                    }
-
-                    requestAnimationFrame(updateTimer);
-                };
-
-                requestAnimationFrame(updateTimer);
-            },
-
-            finishTest() {
-                state.test.endTime = performance.now();
-                state.appState = 'finished';
-
-                const wpm = StatsEngine.calculateWPM();
-                const accuracy = StatsEngine.calculateAccuracy();
-                const errors = StatsEngine.getErrorCount();
-                const chars = StatsEngine.getCharsTyped();
-
-                const previousBest = StorageEngine.getBestScore();
-                StorageEngine.updateBestScore(wpm);
-
-                DOM.resultWpm.textContent = wpm;
-                DOM.resultAccuracy.textContent = accuracy + '%';
-                DOM.resultChars.textContent = chars;
-                DOM.resultErrors.textContent = errors;
-
-                if(previousBest !== null) {
-                    const diff = wpm - previousBest;
-                    if (diff > 0) {
-                        DOM.wpmComparison.textContent = `↑ ${diff} WPM improvement!`;
-                        DOM.wpmComparison.className = 'result-comparison improvement';
-                    } else if (diff < 0){
-                        DOM.wpmComparison.textContent = `↓ ${Math.abs(diff)} WPM below best`;
-                        DOM.wpmComparison.className = 'result-comparison decline';
-                    } else {
-                        DOM.wpmComparison.textContent = '= Matched your best!';
-                        DOM.wpmComparison.className = 'result-comparison';
-                    }
-                } else {
-                    DOM.wpmComparison.textContent = 'First score recorded!';
-                    DOM.wpmComparison.className = 'result-comparison improvement';
-                }
-
-                UI.updateBestScore();
-                UI.showScreen('results');
-            }
+        const minChars = config.mode === 'zen' ? 150 : Math.max(200, config.duration * 10);
+        state.test = {
+            text: TextEngine.generateText(minChars, config.difficulty),
+            charIndex: 0,
+            startTime: null,
+            endTime: null,
+            timerInterval: null,
+            elapsedTime: 0,
+            totalKeystrokes: 0,
+            correctKeystrokes: 0,
+            incorrectKeystrokes: 0,
+            charStates: []
         };
+
+        state.test.charStates = new Array(state.test.text.length).fill('pending');
+
+        DOM.textDisplay.innerHTML = TextEngine.renderTextToHTML(state.test.text);
+
+        if(config.mode === 'timed') {
+            DOM.liveTimer.textContent = config.duration;
+            DOM.timerLabel.textContent = 'seconds';
+        } else {
+            DOM.liveTimer.textContent = '∞';
+            DOM.timerLabel.textContent = 'zen mode';
+        }
+
+        DOM.liveWpm.textContent = '0';
+        DOM.liveAccuracy.textContent = '100';
+
+        UI.updateCharacterDisplay();
+
+        state.appState = 'running';
+    },
+
+    startTimer() {
+        state.test.startTime = performance.now();
+        
+        const updateTimer = () => {
+            if (state.appState !== 'running') return;
+
+            const now = performance.now();
+            state.test.elapsedTime = (now - state.test.startTime) / 1000;
+
+            if (state.config.mode === 'timed') {
+                const remaining = Math.max(0, state.config.duration - state.test.elapsedTime);
+                DOM.liveTimer.textContent = Math.ceil(remaining);
+
+                if (remaining <= 0) {
+                    this.finishTest();
+                    return;
+                }
+            } else {
+                DOM.liveTimer.textContent = Math.floor(state.test.elapsedTime);
+            }
+
+            requestAnimationFrame(updateTimer);
+        };
+
+        requestAnimationFrame(updateTimer);
+    },
+
+    finishTest() {
+        state.test.endTime = performance.now();
+        state.appState = 'finished';
+
+        const wpm = StatsEngine.calculateWPM();
+        const accuracy = StatsEngine.calculateAccuracy();
+        const errors = StatsEngine.getErrorCount();
+        const chars = StatsEngine.getCharsTyped();
+
+        const previousBest = StorageEngine.getBestScore();
+        StorageEngine.updateBestScore(wpm);
+
+        DOM.resultWpm.textContent = wpm;
+        DOM.resultAccuracy.textContent = accuracy + '%';
+        DOM.resultChars.textContent = chars;
+        DOM.resultErrors.textContent = errors;
+
+        if (previousBest !== null) {
+            const diff = wpm - previousBest;
+            if (diff > 0) {
+                DOM.wpmComparison.textContent = `↑ ${diff} WPM improvement!`;
+                DOM.wpmComparison.className = 'result-comparison improvement';
+            } else if (diff < 0) {
+                DOM.wpmComparison.textContent = `↓ ${Math.abs(diff)} WPM below best`;
+                DOM.wpmComparison.className = 'result-comparison decline';
+            } else {
+                DOM.wpmComparison.textContent = '= Matched your best!';
+                DOM.wpmComparison.className = 'result-comparison';
+            }
+        } else {
+            DOM.wpmComparison.textContent = 'First score recorded!';
+            DOM.wpmComparison.className = 'result-comparison improvement';
+        }
+
+        UI.updateBestScores();
+        UI.showScreen('results');
     }
-})
+};
