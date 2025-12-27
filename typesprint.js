@@ -487,3 +487,57 @@ const TypeSprint = (function() {
         UI.showScreen('results');
     }
 };
+
+const UI = {
+    showScreen(screen) {
+        DOM.startScreen.classList.remove('active');
+        DOM.typingScreen.classList.remove('active');
+        DOM.resultsScreen.classList.remove('active');
+
+        switch (screen) {
+            case 'start':
+                DOM.startScreen.classList.add('active');
+                state.appState = 'idle';
+                this.updateBestScores();
+                break;
+            case 'typing':
+                DOM.typingScreen.classList.add('active');
+                TestController.initTest();
+                break;
+            case 'results':
+                DOM.resultsScreen.classList.add('active');
+                break;
+        }
+    },
+
+    updateCharacterDisplay() {
+        const { test } = state;
+        const chars = DOM.textDisplay.querySelectorAll('.char');
+
+        chars.forEach((charEl, index) => {
+            charEl.classList.remove('correct', 'incorrect', 'current', 'pending');
+
+            if(index < test.charIndex) {
+                charEl.classList.add(test.charStates[index]);
+            } else if (index === test.charIndex){
+                charEl.classList.add('current');
+            }
+        });
+
+        const currentChar = chars[test.charIndex];
+        if (currentChar) {
+            const container = DOM.textContainer;
+            const charRect = currentChar.getBoudingClientRect();
+            const containerRect = container.getBoudingClientRect();
+
+        if (charRect.bottom > containerRect.bottom - 50) {
+            currentChar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+},
+
+    updateLiveStats() {
+        DOM.liveWpm.textContent = StatsEngine.calculateWPM();
+        DOM.liveAccuracy.textContent = StatsEngine.calculateAccuracy();
+    }
+}
