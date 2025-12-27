@@ -562,5 +562,119 @@ const UI = {
     toggleTheme() {
         const newTheme = state.settings.theme === 'light' ? 'dark' : 'light';
         this.applyTheme(newTheme);
+    },
+
+    applySound(enabled) {
+        state.settings.soundEnabled = enabled;
+        if (enabled) {
+            document.body.classList.add('sound-on');
+        } else {
+            document.body.classList.remove('sound-on');
+        }
+        StorageEngine.saveSound();
+    },
+
+    toggleSound() {
+        const newState = !state.settings.soundEnabled;
+        this.applySound(newState);
+
+        if(newState) {
+            AudioEngine.init();
+        }
+    },
+
+    handleSelectorClick(selectorId, value) {
+        const selector = document.getElementById(selectorId);
+
+        selector.querySelectorAll('.btn-option').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.value === value);
+        });
+
+        switch (selectorId) {
+            case 'duration-selector':
+                state.config.duration = praseInt(value, 10);
+                break;
+            case 'mode-selector':
+                state.config.mode = value;
+                break;
+            case 'difficulty-selector':
+                state.config.difficulty = value;
+                break;
+        }
     }
+};
+
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
 }
+
+function bindEvents() {
+    document.addEventListener('keydown', (e) => {
+        if (state.appState === 'idle'  && e.key === 'Enter') {
+            e.preventDefault();
+            UI.showScreen('typing');
+            return;
+        }
+
+        InputHandler.handleKeydown(e);
+    });
+
+    DOM.startBtn.addEventListener('click', () => {
+        UI.showScreen('typing');
+    });
+
+    DOM.retryBtn.addEventListener('click', () => {
+        UI.showScreen('typing');
+    });
+
+    DOM.newTestBtn.addEventListener('click', () => {
+        UI.showScreen('start');
+    });
+
+    DOM.themeToggle.addEventListener('click', () => {
+        UI.toggleTheme();
+    });
+
+    DOM.soundToggle.addEventListener('click', () => {
+        UI.toggleSound();
+    });
+
+    ['duration-selector', 'mode-selector', 'difficulty-selector'].forEach(selectorId =>{
+        const selector = document.getElementById(selectorId);
+        selector.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn-option');
+            if (btn) {
+                UI.handleSelectorClick(selectorId, btn.dataset.value);
+            }
+        });
+    });
+
+    DOM.textContainer.addEventListener('click', () => {
+        document.body.focus();
+    });
+
+    function init() {
+        cacheDOMReferences();
+        StorageEngine.loadBestScores();
+        StorageEngine.loadTheme();
+        StorageEngine.loadSound();
+        UI.applyTheme(state.settings.theme);
+        UI.applySound(state.settings.soundEnabled);
+        UI.updateBestScores();
+        bindEvents();
+        UI.showScreen('start');
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init); 
+    } else {
+        init();
+    }
+
+    return {
+        getState: () => ({...state}),
+        reset: () => UI.showScreen('start')
+    };
+})();
