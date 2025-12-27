@@ -539,5 +539,28 @@ const UI = {
     updateLiveStats() {
         DOM.liveWpm.textContent = StatsEngine.calculateWPM();
         DOM.liveAccuracy.textContent = StatsEngine.calculateAccuracy();
+    },
+
+    updateBestScores() {
+        const bestTimed = StorageEngine.getOverallBest('timed');
+        const bestZen = StorageEngine.getOverallBest('zen');
+
+        DOM.bestTimed.textContent = bestTimed ? bestTimed + ' WPM' : '-';
+        DOM.bestZen.textContent = bestZen ? bestZen + ' WPM' : '-';
+    },
+
+    applyTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark');
+        } else {
+            document.body.classList.remove('dark');
+        }
+        state.settings.theme = theme;
+        StorageEngine.saveTheme();
+    },
+
+    toggleTheme() {
+        const newTheme = state.settings.theme === 'light' ? 'dark' : 'light';
+        this.applyTheme(newTheme);
     }
 }
