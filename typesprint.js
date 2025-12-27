@@ -527,8 +527,8 @@ const UI = {
         const currentChar = chars[test.charIndex];
         if (currentChar) {
             const container = DOM.textContainer;
-            const charRect = currentChar.getBoudingClientRect();
-            const containerRect = container.getBoudingClientRect();
+            const charRect = currentChar.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
 
         if (charRect.bottom > containerRect.bottom - 50) {
             currentChar.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -592,7 +592,7 @@ const UI = {
 
         switch (selectorId) {
             case 'duration-selector':
-                state.config.duration = praseInt(value, 10);
+                state.config.duration = parseInt(value, 10);
                 break;
             case 'mode-selector':
                 state.config.mode = value;
@@ -654,6 +654,7 @@ function bindEvents() {
     DOM.textContainer.addEventListener('click', () => {
         document.body.focus();
     });
+}
 
     function init() {
         cacheDOMReferences();
